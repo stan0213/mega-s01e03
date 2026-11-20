@@ -4,7 +4,7 @@ title: '#4471 · two problems, not one'
 owner: Stan (MEGA.dev)
 status: closed
 reviewed: 2026-11-20
-signature: Stan (MEGA.dev)
+signature: v1.eyJzdWIiOiI2MzgzIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTUyMTE4NzksImV4cCI6MTc5NTI5ODI3OX0.cQwJnh3mlzmCVY5wpz56cBWm87Fgh6-EVgbZHRXD_ks
 ---
 
 <script>
