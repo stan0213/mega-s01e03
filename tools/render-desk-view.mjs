@@ -1,10 +1,10 @@
 // Renders a kb page the way the desk sees it: runbook frame, components run on the data.
 // No Svelte build in this export, so this does by hand what the layout and components do,
-// with the kb's own logic (causes.ts, problems.ts, desk-ref.ts, staleness.ts).
+// with the kb's own logic (causes.ts, desk-ref.ts, staleness.ts).
 // Usage: node --import ./tools/lib-alias.mjs tools/render-desk-view.mjs <page.svx> <out.html>
 import fs from 'node:fs';
 import path from 'node:path';
-import { splitTicket } from '#lib/kb/problems';
+import { groupByCause, readAs, uniqueById } from '#lib/kb/causes';
 import { deskRef } from '#lib/kb/desk-ref';
 import { daysSince, isoDay, STALE_AFTER_DAYS } from '#lib/kb/staleness';
 
@@ -33,7 +33,9 @@ const meta = Object.fromEntries(
   }),
 );
 const script = rest.match(/<script>([\s\S]*?)<\/script>/)?.[1] ?? '';
-const issues = Object.fromEntries([...script.matchAll(/'?([\w-]+)'?: '([^']+)'/g)].map((m) => [m[1], m[2]]));
+const issues = Object.fromEntries(
+  [...script.matchAll(/'?([\w-]+)'?: \{ href: '([^']+)', outcome: (?:'([^']*)'|"([^"]*)") \}/g)].map((m) => [m[1], { href: m[2], outcome: m[3] ?? m[4] }]),
+);
 const body = rest.replace(/<script>[\s\S]*?<\/script>/, '').trim();
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -45,20 +47,26 @@ const inline = (s) =>
 
 // Components, as the .svelte files render them.
 function problemSplit(ticket) {
-  const groups = splitTicket(reports, ticket, tenantOf, notes.oneDayMove);
-  const total = groups.reduce((n, g) => n + g.reports.length, 0);
+  const merged = uniqueById(reports).filter((r) => r.mergedInto === ticket);
+  const groups = groupByCause(merged, tenantOf);
   const tags = (g) => Object.entries(g.taggedAs).sort((a, b) => b[1] - a[1]).map(([t, n]) => `${t} ×${n}`).join(' · ');
   const rows = groups
     .map((g) => {
-      const link = issues[g.problem];
-      const cell = link ? `<a href="${esc(link)}">#${esc(link.split('/').pop())}</a>` : '<span class="none">no ticket</span>';
-      return `<tr><td><code>${g.problem}</code></td><td>${g.reports.length}</td><td class="tags">${tags(g)}</td><td>${g.tenants}</td><td>${g.firstSeen} → ${g.lastSeen}</td><td>${cell}</td></tr>`;
+      const t = issues[g.cause];
+      const cell = t ? `<a href="${esc(t.href)}">#${esc(t.href.split('/').pop())}</a>` : '<span class="none">no ticket</span>';
+      return `<tr><td><code>${g.cause}</code></td><td>${g.reports.length}</td><td class="tags">${tags(g)}</td><td>${g.tenants}</td><td>${g.firstSeen} → ${g.lastSeen}</td><td>${cell}</td><td>${esc(t?.outcome ?? '')}</td></tr>`;
     })
     .join('\n');
-  return `<p class="sum"><strong>${total}</strong> reports merged into #${ticket} · <strong>${groups.length}</strong> ${groups.length === 1 ? 'problem' : 'problems'}</p>
-<table><thead><tr><th>problem</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th></tr></thead><tbody>
+  const notesHtml = groups
+    .map((g) => [g, readAs(g, notes.oneDayMove)])
+    .filter(([, moved]) => moved)
+    .map(([g, moved]) => `<p class="note">${moved} reports read as a one-day move; filed under <code>${g.cause}</code> by tenant.</p>`)
+    .join('\n');
+  return `<p class="sum"><strong>${merged.length}</strong> reports merged into #${ticket} · <strong>${groups.length}</strong> ${groups.length === 1 ? 'problem' : 'problems'}</p>
+<table><thead><tr><th>problem</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th><th>outcome</th></tr></thead><tbody>
 ${rows}
-</tbody></table>`;
+</tbody></table>
+${notesHtml}`;
 }
 const renderStamp = (signature) =>
   signature

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>#4471 · three problems, not one · support kb</title>
+<title>#4471 · two problems, not one · support kb</title>
 <style>
   :root {
     --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
@@ -32,6 +32,7 @@
 
   .sum { font-size: 1.1rem; }
   .tags { color: var(--muted); font-size: 0.85em; }
+  .note { color: var(--muted); font-size: 0.85em; }
   .none { color: var(--warn); font-weight: 600; }
 
 
@@ -48,40 +49,40 @@
 <div class="kb">
   <header>
     <a class="crumb" href="/kb">support desk · kb</a>
-    <h1>#4471 · three problems, not one</h1>
+    <h1>#4471 · two problems, not one</h1>
     <p class="meta">
       <span>owner <b>Stan (MEGA.dev)</b></span>
-      <span class="status open">open</span>
+      <span class="status closed">closed</span>
       <span class="">reviewed 2026-11-20 · 0 days ago</span>
     </p>
   </header>
   
   <main>
-<p><a href="/kb/incidents/4471">#4471</a> was merged as one issue and marked known: the parser reads dates month first, and one fix is queued. Read by what each report shows, the ticket holds three problems. Each one now has a ticket of its own.</p>
-<aside class="warn"><p>The queued parser fix closes one of the three. The other two keep coming after it ships.</p></aside>
-<h2>What #4471 holds</h2>
-<p class="sum"><strong>412</strong> reports merged into #4471 · <strong>3</strong> problems</p>
-<table><thead><tr><th>problem</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th></tr></thead><tbody>
-<tr><td><code>parser</code></td><td>374</td><td class="tags">parser ×351 · hint ×23</td><td>11</td><td>2026-04-01 → 2026-10-04</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/1">#1</a></td></tr>
-<tr><td><code>hint</code></td><td>33</td><td class="tags">hint ×18 · parser ×15</td><td>3</td><td>2026-04-17 → 2026-09-22</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/2">#2</a></td></tr>
-<tr><td><code>one-day-move</code></td><td>5</td><td class="tags">parser ×5</td><td>5</td><td>2026-04-02 → 2026-10-04</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/3">#3</a></td></tr>
+<p><a href="/kb/incidents/4471">#4471</a> was merged as one issue and marked known: the parser reads dates month first, one fix queued. Read by cause, it held two problems. Each got a ticket of its own, and #4471 closed on 5 October.</p>
+<aside class="note"><p>Closed. The parser is fixed; the hint goes with the booking-v3 form, which is retired.</p></aside>
+<h2>What #4471 held</h2>
+<p class="sum"><strong>412</strong> reports merged into #4471 · <strong>2</strong> problems</p>
+<table><thead><tr><th>problem</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th><th>outcome</th></tr></thead><tbody>
+<tr><td><code>parser</code></td><td>379</td><td class="tags">parser ×356 · hint ×23</td><td>11</td><td>2026-04-01 → 2026-10-04</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/1">#1</a></td><td>fixed</td></tr>
+<tr><td><code>hint</code></td><td>33</td><td class="tags">hint ×18 · parser ×15</td><td>3</td><td>2026-04-17 → 2026-09-22</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/2">#2</a></td><td>won't fix</td></tr>
 </tbody></table>
-<h2>The three problems</h2>
+<p class="note">5 reports read as a one-day move; filed under <code>parser</code> by tenant.</p>
+<h2>The two problems</h2>
 <ul>
-<li><strong><code>parser</code></strong>: every tenant writes the day first, and the shared parser reads every date month first. A booking for 7 April comes out on 4 July. This is the bug #4471 names, and the queued fix is for it. <a href="https://github.com/stan0213/mega-s01e03/issues/1">Ticket</a>.</li>
-<li><strong><code>hint</code></strong>: the booking-v3 form prints <code>MM/DD/YYYY</code> under its date field. People type what the hint tells them, month first, and the form reads it the tenant's way, day first. It only comes through the form, on tenants that run booking-v3. Fixing the parser does not fix it: the hint has to change. <a href="https://github.com/stan0213/mega-s01e03/issues/2">Ticket</a>.</li>
-<li><strong><code>one-day-move</code></strong>: the date moves by one day, not month for day. One meeting showed Tuesday to a client in Lisbon and Monday to a client in Toronto. That points at time zones, not at the parser. The desk noted these reports and filed them under <code>parser</code> by tenant. <a href="https://github.com/stan0213/mega-s01e03/issues/3">Ticket</a>.</li>
+<li><strong><code>parser</code></strong>: every tenant writes the day first, and the shared parser read every date month first. A booking for 7 April came out on 4 July. Fixed by <code>fix(dates): parse dd/mm for eu locales</code>. <a href="https://github.com/stan0213/mega-s01e03/issues/1">Ticket</a>.</li>
+<li><strong><code>hint</code></strong>: the booking-v3 form printed <code>MM/DD/YYYY</code> under its date field. People typed what the hint told them, month first, and the form read it the tenant's way, day first. It only came through the form, on tenants that run booking-v3. The parser fix does not touch it. Won't fix: the booking-v3 form is retired. <a href="https://github.com/stan0213/mega-s01e03/issues/2">Ticket</a>.</li>
 </ul>
+<h2>The one-day moves</h2>
+<p>The desk read some reports as a one-day move, not month for day (<a href="https://github.com/stan0213/mega-s01e03/blob/main/src/lib/data/desk-notes.json">desk notes</a>). They come from day-first tenants and are counted under <code>parser</code> by tenant, as the footnote under the table shows. A ticket for them on their own was closed into the parser ticket: <a href="https://github.com/stan0213/mega-s01e03/issues/3">#3</a>. If one-day moves still come in now that the parser is fixed, they are a problem of their own: check time zones first.</p>
 <h2>Why it looked like one</h2>
 <ul>
-<li><a href="/kb/decisions/0001-dedupe-by-subject">Decision 0001</a> merges on subject. All three problems arrive under the same subject lines (&quot;Wrong day on the invite&quot;, &quot;Date is wrong&quot;), so the subject alone could never tell them apart.</li>
+<li><a href="/kb/decisions/0001-dedupe-by-subject">Decision 0001</a> merges on subject. Both problems arrived under the same subject lines (&quot;Wrong day on the invite&quot;, &quot;Date is wrong&quot;), so the subject alone could never tell them apart.</li>
 <li>The tag intake puts on a report is a guess from the reporter's browser. The cause comes from the tenant: where they are, which form they run and how the report came in. The &quot;tagged as&quot; column above shows how often the two disagree.</li>
 </ul>
 <h2>What changes</h2>
 <ul>
-<li>#4471 stays the <code>parser</code> ticket. <code>hint</code> and <code>one-day-move</code> are tracked in their own tickets.</li>
-<li>When the parser fix ships, do not close the reports merged into #4471 as fixed. Check each against its problem first.</li>
-<li>A big ticket can be many bugs under one subject. Split by what the reports show, then count.</li>
+<li>A report merged into #4471 belongs to one of two tickets. Close it with that ticket's outcome, not #4471's.</li>
+<li>A big ticket can be many bugs under one subject. Split by cause, then count.</li>
 </ul>
 <p class="stamp">desk ref <b>DR-EXBG-ZQCH</b></p>
   </main>
