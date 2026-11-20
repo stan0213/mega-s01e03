@@ -1,0 +1,64 @@
+---
+layout: runbook
+title: '#4471 · three problems, not one'
+owner: Stan (MEGA.dev)
+status: open
+reviewed: 2026-11-20
+signature: Stan (MEGA.dev)
+---
+
+<script>
+  import ProblemSplit from '#lib/kb/ProblemSplit.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const issues = {
+    parser: 'https://github.com/stan0213/mega-s01e03/issues/1',
+    hint: 'https://github.com/stan0213/mega-s01e03/issues/2',
+    'one-day-move': 'https://github.com/stan0213/mega-s01e03/issues/3',
+  };
+</script>
+
+[#4471](/kb/incidents/4471) was merged as one issue and marked known: the parser reads dates
+month first, and one fix is queued. Read by what each report shows, the ticket holds three
+problems. Each one now has a ticket of its own.
+
+<Callout kind="warn">
+The queued parser fix closes one of the three. The other two keep coming after it ships.
+</Callout>
+
+## What #4471 holds
+
+<ProblemSplit ticket={4471} {issues} />
+
+## The three problems
+
+- **`parser`**: every tenant writes the day first, and the shared parser reads every date
+  month first. A booking for 7 April comes out on 4 July. This is the bug #4471 names, and
+  the queued fix is for it. [Ticket](https://github.com/stan0213/mega-s01e03/issues/1).
+- **`hint`**: the booking-v3 form prints `MM/DD/YYYY` under its date field. People type what
+  the hint tells them, month first, and the form reads it the tenant's way, day first. It
+  only comes through the form, on tenants that run booking-v3. Fixing the parser does not fix
+  it: the hint has to change. [Ticket](https://github.com/stan0213/mega-s01e03/issues/2).
+- **`one-day-move`**: the date moves by one day, not month for day. One meeting showed
+  Tuesday to a client in Lisbon and Monday to a client in Toronto. That points at time zones,
+  not at the parser. The desk noted these reports and filed them under `parser` by tenant.
+  [Ticket](https://github.com/stan0213/mega-s01e03/issues/3).
+
+## Why it looked like one
+
+- [Decision 0001](/kb/decisions/0001-dedupe-by-subject) merges on subject. All three problems
+  arrive under the same subject lines ("Wrong day on the invite", "Date is wrong"), so the
+  subject alone could never tell them apart.
+- The tag intake puts on a report is a guess from the reporter's browser. The cause comes from
+  the tenant: where they are, which form they run and how the report came in. The "tagged as"
+  column above shows how often the two disagree.
+
+## What changes
+
+- #4471 stays the `parser` ticket. `hint` and `one-day-move` are tracked in their own tickets.
+- When the parser fix ships, do not close the reports merged into #4471 as fixed. Check each
+  against its problem first.
+- A big ticket can be many bugs under one subject. Split by what the reports show, then count.
+
+<RenderStamp {signature} />

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#4471 · three problems, not one · support kb</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+    --accent: #2f6f5e; --warn: #b4501f; --warn-bg: #fbeee6; --note-bg: #eef5f2;
+    --mono: ui-monospace, 'Cascadia Code', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171716; --fg: #ecebe6; --muted: #9c9a93; --line: #34332f;
+      --accent: #6fbfa6; --warn: #f0905d; --warn-bg: #3a2418; --note-bg: #1d2c27;
+    }
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, sans-serif; }
+  .kb table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+  .kb th, .kb td { border-bottom: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+  .kb code { font-family: var(--mono); font-size: 0.88em; }
+  .kb a { color: var(--accent); }
+  .kb { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; }
+  .crumb { font: 0.8rem var(--mono); text-decoration: none; color: var(--muted); }
+  h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
+  .stale { color: var(--warn); font-weight: 600; }
+  .banner { background: var(--warn-bg); color: var(--warn); padding: 0.6rem 1rem; border-radius: 6px; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+
+  .sum { font-size: 1.1rem; }
+  .tags { color: var(--muted); font-size: 0.85em; }
+  .none { color: var(--warn); font-weight: 600; }
+
+
+  aside { border-left: 4px solid var(--accent); padding: 0.5rem 1rem; margin: 1rem 0; background: var(--note-bg); }
+  aside.warn { border-color: var(--warn); background: var(--warn-bg); }
+
+
+  .stamp { margin: 2rem 0 0; font: 0.85rem var(--mono); color: var(--muted); }
+  .stamp b { color: var(--accent); letter-spacing: 0.04em; }
+  .missing { color: var(--warn); }
+</style>
+</head>
+<body>
+<div class="kb">
+  <header>
+    <a class="crumb" href="/kb">support desk · kb</a>
+    <h1>#4471 · three problems, not one</h1>
+    <p class="meta">
+      <span>owner <b>Stan (MEGA.dev)</b></span>
+      <span class="status open">open</span>
+      <span class="">reviewed 2026-11-20 · 0 days ago</span>
+    </p>
+  </header>
+  
+  <main>
+<p><a href="/kb/incidents/4471">#4471</a> was merged as one issue and marked known: the parser reads dates month first, and one fix is queued. Read by what each report shows, the ticket holds three problems. Each one now has a ticket of its own.</p>
+<aside class="warn"><p>The queued parser fix closes one of the three. The other two keep coming after it ships.</p></aside>
+<h2>What #4471 holds</h2>
+<p class="sum"><strong>412</strong> reports merged into #4471 · <strong>3</strong> problems</p>
+<table><thead><tr><th>problem</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th>ticket</th></tr></thead><tbody>
+<tr><td><code>parser</code></td><td>374</td><td class="tags">parser ×351 · hint ×23</td><td>11</td><td>2026-04-01 → 2026-10-04</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/1">#1</a></td></tr>
+<tr><td><code>hint</code></td><td>33</td><td class="tags">hint ×18 · parser ×15</td><td>3</td><td>2026-04-17 → 2026-09-22</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/2">#2</a></td></tr>
+<tr><td><code>one-day-move</code></td><td>5</td><td class="tags">parser ×5</td><td>5</td><td>2026-04-02 → 2026-10-04</td><td><a href="https://github.com/stan0213/mega-s01e03/issues/3">#3</a></td></tr>
+</tbody></table>
+<h2>The three problems</h2>
+<ul>
+<li><strong><code>parser</code></strong>: every tenant writes the day first, and the shared parser reads every date month first. A booking for 7 April comes out on 4 July. This is the bug #4471 names, and the queued fix is for it. <a href="https://github.com/stan0213/mega-s01e03/issues/1">Ticket</a>.</li>
+<li><strong><code>hint</code></strong>: the booking-v3 form prints <code>MM/DD/YYYY</code> under its date field. People type what the hint tells them, month first, and the form reads it the tenant's way, day first. It only comes through the form, on tenants that run booking-v3. Fixing the parser does not fix it: the hint has to change. <a href="https://github.com/stan0213/mega-s01e03/issues/2">Ticket</a>.</li>
+<li><strong><code>one-day-move</code></strong>: the date moves by one day, not month for day. One meeting showed Tuesday to a client in Lisbon and Monday to a client in Toronto. That points at time zones, not at the parser. The desk noted these reports and filed them under <code>parser</code> by tenant. <a href="https://github.com/stan0213/mega-s01e03/issues/3">Ticket</a>.</li>
+</ul>
+<h2>Why it looked like one</h2>
+<ul>
+<li><a href="/kb/decisions/0001-dedupe-by-subject">Decision 0001</a> merges on subject. All three problems arrive under the same subject lines (&quot;Wrong day on the invite&quot;, &quot;Date is wrong&quot;), so the subject alone could never tell them apart.</li>
+<li>The tag intake puts on a report is a guess from the reporter's browser. The cause comes from the tenant: where they are, which form they run and how the report came in. The &quot;tagged as&quot; column above shows how often the two disagree.</li>
+</ul>
+<h2>What changes</h2>
+<ul>
+<li>#4471 stays the <code>parser</code> ticket. <code>hint</code> and <code>one-day-move</code> are tracked in their own tickets.</li>
+<li>When the parser fix ships, do not close the reports merged into #4471 as fixed. Check each against its problem first.</li>
+<li>A big ticket can be many bugs under one subject. Split by what the reports show, then count.</li>
+</ul>
+<p class="stamp">desk ref <b>DR-EXBG-ZQCH</b></p>
+  </main>
+  <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+</div>
+</body>
+</html>
